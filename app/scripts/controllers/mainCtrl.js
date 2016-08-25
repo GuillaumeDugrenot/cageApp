@@ -1,7 +1,5 @@
 angular.module('cageApp').controller('mainCtrl', function($scope, movies){
-
     movies.query(function(films) {
-        
         var nbPages = films.total_pages;
         var filmographie = [];
         for(var pageEnCours = 1; pageEnCours <= nbPages; pageEnCours++){
@@ -12,6 +10,5 @@ angular.module('cageApp').controller('mainCtrl', function($scope, movies){
                 $scope.filmographie = filmographie;
             });
         }
-        console.log($scope.filmographie);
     });
 });
