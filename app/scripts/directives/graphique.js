@@ -1,83 +1,81 @@
 angular.module('cageApp').directive('graphique', function(){
     return {
-            restrict: 'E',
-            scope:{
-                films: '='
-            },
-            templateUrl: 'templates/graphique.html',
-            link: function(scope, element, attrs){
+        restrict: 'E',
+        scope:{
+            films: '='
+        },
+        templateUrl: 'templates/graphique.html',
+        link: function(scope, element, attrs){
+            var films = scope.films,
+            margin = {left: 200, right: 200, bottom: 100, top: 100},
 
-                var films = scope.films,
-                margin = {left: 200, right: 200, bottom: 100, top: 100},
-                // time parsing's function
-                format = d3.time.format('%Y-%m-%d').parse,
+            // time parsing's function
+            format = d3.time.format('%Y-%m-%d').parse,
 
-                // Set canvas' dimensions
-                width = 1000,
-                height= 600,
+            // Set canvas' dimensions
+            width = 1000,
+            height= 600,
 
-                // Set the range of the canvas
-                x = d3.time.scale().range([0, width]),
-                y = d3.scale.linear().range([height, 0]);
+            // Set the range of the canvas
+            x = d3.time.scale().range([0, width]),
+            y = d3.scale.linear().range([height, 0]);
+            r = d3.scale.linear().range([2, 10]);
 
-                // Parsing each release_date movie
-                films.forEach((d) => {
-                    d.release_date = format(d.release_date);
-                });
+            // Parsing each release_date movie
+            films.forEach((d) => {
+                d.release_date = format(d.release_date);
+            });
 
-                // Scale the range of datas
-                x.domain(d3.extent(films, (d) => { return d.release_date; }));
-                y.domain([0, d3.max(films,(d) => { return d.vote_average; })]);
+            // Scale the range of datas
+            x.domain(d3.extent(films, (d) => { return d.release_date; }));
+            r.domain(d3.extent(films,(d)  => { return d.popularity; }));
+            y.domain([0, 10]);
 
-                var xAxis = d3.svg.axis().scale(x)
-                    .orient('bottom').ticks(5);
+            var xAxis = d3.svg.axis().scale(x)
+                .orient('bottom').ticks(7);
 
-                var yAxis = d3.svg.axis().scale(y)
-                    .orient("left").ticks(10);
+            var yAxis = d3.svg.axis().scale(y)
+                .orient("left");
 
-                // Paramètrage du canvas
-                var svg = d3.select('graphique')
-                            .append('svg')
-                                .attr('width', width + margin.left + margin.right)
-                                .attr('height', height + margin.bottom + margin.top)
-                                .append('g')
-                                    .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
+            // Paramètrage du canvas
+            var svg = d3.select('graphique')
+                        .append('svg')
+                            .attr('width', width + margin.left + margin.right)
+                            .attr('height', height + margin.bottom + margin.top)
+                            .append('g')
+                                .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
-                // Paramétrage des cercles
-                svg.selectAll('circle')
-                    .data(films)
-                    .enter()
-                    .append('circle')
+            // Paramétrage des cercles
+            svg.selectAll('circle')
+                .data(films)
+                .enter()
+                .append('circle')
+                    .attr('fill', 'black')
+                    .attr('cx', 0)
+                    .transition()
+                    .duration(3000)
+                    .ease('cubic')
                     .attr('cx', (d) => {
+                        console.log(d.original_title +' : '+ d.vote_average);
                         return x(d.release_date);
                     })
                     .attr('cy', (d) => {
                         return y(d.vote_average);
                     })
-                    .attr('r', '10' )
-                    .attr('fill', 'black');
+                    .attr('r', (d) => {
+                        return r(d.popularity);
+                    });
 
-                svg.selectAll('text')
-                    .data(films)
-                    .enter()
-                    .append('text')
-                        .text((d) => {
-                            return d.original_title;
-                        })
-                        .attr('x', (d) => {
-                            return x(d.release_date);
-                        })
-                        .attr('y', (d) => {
-                            return y(d.vote_average);
-                        })
+            // Configuration de l'axe des abcisses
+            svg.append('g')
+                    .attr('transform', 'translate(0,'+ height +')')
+                .call(xAxis)
+                    .attr('class', 'abscisse');
 
-                svg.append('g')
-                        .attr('transform', 'translate(0,'+ height +')')
-                    .call(xAxis);
-
-                svg.append('g')
-                    .call(yAxis);
-
-            }
+            // Configuration de l'axe des ordonnées
+            svg.append('g')
+                .call(yAxis)
+                    .attr('class', 'ordonnee');
+        }
     }
 })
