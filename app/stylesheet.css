@@ -2,3 +2,8 @@ svg {
     display:block;
     margin: 0 auto;
 }
+
+.abscisse path.domain, .abscisse line,.ordonnee path.domain, .ordonnee line{
+    fill: none;
+    stroke:black;
+}
