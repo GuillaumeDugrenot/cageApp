@@ -6,14 +6,15 @@ angular.module('cageApp').directive('graphique', function(){
             },
             templateUrl: 'templates/graphique.html',
             link: function(scope, element, attrs){
-                films = scope.films,
 
+                var films = scope.films,
+                margin = {left: 200, right: 200, bottom: 100, top: 100},
                 // time parsing's function
-                parseDate = d3.time.format('%y-%b-%d').parse,
+                format = d3.time.format('%Y-%m-%d').parse,
 
                 // Set canvas' dimensions
-                width = 800,
-                height= 500,
+                width = 1000,
+                height= 600,
 
                 // Set the range of the canvas
                 x = d3.time.scale().range([0, width]),
@@ -21,7 +22,7 @@ angular.module('cageApp').directive('graphique', function(){
 
                 // Parsing each release_date movie
                 films.forEach((d) => {
-                    d.release_date = parseDate(d.release_date);
+                    d.release_date = format(d.release_date);
                 });
 
                 // Scale the range of datas
@@ -34,14 +35,48 @@ angular.module('cageApp').directive('graphique', function(){
                 var yAxis = d3.svg.axis().scale(y)
                     .orient("left").ticks(10);
 
-                var valueLine = d3.svg.line()
-                    .x((d) => { return x(d.release_date); })
-                    .y((d) => { return y(d.vote_average); });
-
-                var svg = d3.select('body')
+                // Paramètrage du canvas
+                var svg = d3.select('graphique')
                             .append('svg')
-                                .attr('width', width)
-                                .attr('height', height);
+                                .attr('width', width + margin.left + margin.right)
+                                .attr('height', height + margin.bottom + margin.top)
+                                .append('g')
+                                    .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
+
+                // Paramétrage des cercles
+                svg.selectAll('circle')
+                    .data(films)
+                    .enter()
+                    .append('circle')
+                    .attr('cx', (d) => {
+                        return x(d.release_date);
+                    })
+                    .attr('cy', (d) => {
+                        return y(d.vote_average);
+                    })
+                    .attr('r', '10' )
+                    .attr('fill', 'black');
+
+                svg.selectAll('text')
+                    .data(films)
+                    .enter()
+                    .append('text')
+                        .text((d) => {
+                            return d.original_title;
+                        })
+                        .attr('x', (d) => {
+                            return x(d.release_date);
+                        })
+                        .attr('y', (d) => {
+                            return y(d.vote_average);
+                        })
+
+                svg.append('g')
+                        .attr('transform', 'translate(0,'+ height +')')
+                    .call(xAxis);
+
+                svg.append('g')
+                    .call(yAxis);
 
             }
     }
