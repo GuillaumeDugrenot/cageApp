@@ -6,7 +6,6 @@ angular.module('cageApp').directive('legende', function(actorInfos) {
         link: function(scope, element, attrs) {
             actorInfos.genres.query(function(results) {
                 var genres = results.genres;
-                console.log(genres);
             });
 
         }

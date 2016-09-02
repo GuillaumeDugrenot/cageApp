@@ -42,6 +42,7 @@ angular.module('cageApp').directive('graphique', function(){
                         .append('svg')
                             .attr('width', width + margin.left + margin.right)
                             .attr('height', height + margin.bottom + margin.top)
+                            .attr('viewBox', '0 0 '+ (margin.right + width + margin.left) +' '+ (margin.top + height + margin.bottom))
                             .append('g')
                                 .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
@@ -56,7 +57,6 @@ angular.module('cageApp').directive('graphique', function(){
                     .duration(3000)
                     .ease('cubic')
                     .attr('cx', (d) => {
-                        console.log(d.original_title +' : '+ d.vote_average);
                         return x(d.release_date);
                     })
                     .attr('cy', (d) => {

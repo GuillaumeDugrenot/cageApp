@@ -5,17 +5,26 @@
         <link rel="stylesheet" href="/stylesheet.css">
         <title></title>
     </head>
-    <body>
+    <body ng-controller="mainCtrl">
 
-        <div ng-controller="mainCtrl">
-            <graphique ng-if='filmographie'films='filmographie'></graphique>
+        <div ng-if='filmographie'>
+            <graphique films='filmographie'></graphique>
+            <legende></legende>
         </div>
+        <!-- Liste des dépendances -->
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-resource/angular-resource.js"></script>
         <script src="bower_components/d3/d3.min.js"></script>
         <script src="scripts/app.js"></script>
-        <script src="scripts/services/getCageMovie.js"></script>
-        <script src="scripts/directives/graphique.js"></script>
+
+        <!-- Liste des services -->
+        <script src="scripts/services/actorInfos.js"></script>
+
+        <!-- Liste des contrôleurs -->
         <script src="scripts/controllers/mainCtrl.js"></script>
+
+        <!-- Liste des directives -->
+        <script src="scripts/directives/graphique.js"></script>
+        <script src="scripts/directives/legende.js"></script>
     </body>
 </html>

@@ -1,6 +1,7 @@
 svg {
     display:block;
     margin: 0 auto;
+    width: 100%
 }
 
 .abscisse path.domain, .abscisse line,.ordonnee path.domain, .ordonnee line{
