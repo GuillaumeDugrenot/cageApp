@@ -11,6 +11,7 @@ angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos
                     && filmsParPage.results[film].vote_average != 10
                     && filmsParPage.results[film].vote_average != 0
                     && filmsParPage.results[film].genre_ids.length != 0){
+                        // Si le genre du film n'est pas déjà présent dans le tableau des genres, on l'ajoute
                         if(genres.indexOf(filmsParPage.results[film].genre_ids[0]) === -1){
                             genres.push(filmsParPage.results[film].genre_ids[0]);
                         }
