@@ -1,4 +1,4 @@
-angular.module('cageApp').controller('mainCtrl', function($scope, actorInfos){
+angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos){
     // Recherches des films avec le provider actorInfos
     actorInfos.movies.query(function(films) {
         var nbPages      = films.total_pages;
@@ -19,11 +19,7 @@ angular.module('cageApp').controller('mainCtrl', function($scope, actorInfos){
                 }
             });
         }
-        $scope.filmographie = filmographie;
-    });
-
-    //Recherche des genres
-    actorInfos.genres.query(function(results){
-        var genres = results.genres;
+        $scope.filmographie       = filmographie;
+        $scope.genresFilmographie = genres;
     });
 });
