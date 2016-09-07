@@ -7,7 +7,7 @@ angular.module('cageApp').directive('graphique', function(){
         templateUrl: 'templates/graphique.html',
         link: function(scope, element, attrs){
             var films = scope.films,
-            margin = {left: 200, right: 200, bottom: 100, top: 100},
+            margin = {left: 100, right: 100, bottom: 100, top: 100},
 
             // time parsing's function
             format = d3.time.format('%Y-%m-%d').parse,
@@ -33,6 +33,7 @@ angular.module('cageApp').directive('graphique', function(){
 
             var xAxis = d3.svg.axis().scale(x)
                 .orient('bottom').ticks(7);
+
 
             var yAxis = d3.svg.axis().scale(y)
                 .orient("left");
@@ -72,10 +73,27 @@ angular.module('cageApp').directive('graphique', function(){
                 .call(xAxis)
                     .attr('class', 'abscisse');
 
+
             // Configuration de l'axe des ordonnées
             svg.append('g')
                 .call(yAxis)
-                    .attr('class', 'ordonnee');
+                    .attr('class', 'ordonnee')
+                    // Titre de l'axe des ordonnées
+                    .append('text')
+                        .attr('class', 'titre-axe')
+                        .attr('transform', 'rotate(-90)')
+                        .attr('y', 0 - margin.left)
+                        .attr('x',0 - (height / 2))
+                        .attr('text-anchor','middle')
+                        .text('Note du film (sur 10)');
+
+            svg.append('text')
+                .attr('class', 'titre-axe')
+                .attr('text-anchor', 'middle')
+                .attr('x',width / 2)
+                .attr('y',height + margin.bottom)
+                .text('Date de sortie des films.');
+
         }
     }
 })
