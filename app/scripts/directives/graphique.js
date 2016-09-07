@@ -6,20 +6,21 @@ angular.module('cageApp').directive('graphique', function(){
         },
         templateUrl: 'templates/graphique.html',
         link: function(scope, element, attrs){
-            var films = scope.films,
-            margin = {left: 100, right: 100, bottom: 100, top: 100},
-
+            /* Initialize tooltip */
+            var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d; });
+            var films = scope.films;
+            var margin = {left: 100, right: 100, bottom: 100, top: 100};
+            var duration = 250;
             // time parsing's function
-            format = d3.time.format('%Y-%m-%d').parse,
-
+            var format = d3.time.format('%Y-%m-%d').parse;
             // Set canvas' dimensions
-            width = 1000,
-            height= 600,
+            var width = 1000;
+            var height= 600;
 
             // Set the range of the canvas
-            x = d3.time.scale().range([0, width]),
-            y = d3.scale.linear().range([height, 0]);
-            r = d3.scale.linear().range([2, 10]);
+            var x = d3.time.scale().range([0, width]);
+            var y = d3.scale.linear().range([height, 0]);
+            var r = d3.scale.linear().range([2, 10]);
 
             // Parsing each release_date movie
             films.forEach((d) => {
@@ -34,7 +35,6 @@ angular.module('cageApp').directive('graphique', function(){
             var xAxis = d3.svg.axis().scale(x)
                 .orient('bottom').ticks(7);
 
-
             var yAxis = d3.svg.axis().scale(y)
                 .orient("left");
 
@@ -45,18 +45,21 @@ angular.module('cageApp').directive('graphique', function(){
                             .attr('height', height + margin.bottom + margin.top)
                             .attr('viewBox', '0 0 '+ (margin.right + width + margin.left) +' '+ (margin.top + height + margin.bottom))
                             .append('g')
-                                .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
+                                .attr('transform', 'translate('+ margin.left +','+ margin.top +')')
+                            .call(tip);
 
             // Paramétrage des cercles
             svg.selectAll('circle')
                 .data(films)
                 .enter()
                 .append('circle')
-                    .attr('fill', 'black')
                     .attr('cx', 0)
                     .transition()
-                    .duration(3000)
-                    .ease('cubic')
+                    .duration(duration)
+                    .delay((d, i) => {
+                        return i * duration;
+                    })
+                    .ease('cubic-in-out')
                     .attr('cx', (d) => {
                         return x(d.release_date);
                     })
@@ -65,19 +68,22 @@ angular.module('cageApp').directive('graphique', function(){
                     })
                     .attr('r', (d) => {
                         return r(d.popularity);
-                    });
+                    })
+                    .attr('fill', (d) => {
+                        return chooseColor(d);
+                    })
+
 
             // Configuration de l'axe des abcisses
             svg.append('g')
                     .attr('transform', 'translate(0,'+ height +')')
-                .call(xAxis)
-                    .attr('class', 'abscisse');
-
+                    .attr('class', 'abscisse')
+                    .call(xAxis);
 
             // Configuration de l'axe des ordonnées
             svg.append('g')
-                .call(yAxis)
-                    .attr('class', 'ordonnee')
+                .attr('class', 'ordonnee')
+                    .call(yAxis)
                     // Titre de l'axe des ordonnées
                     .append('text')
                         .attr('class', 'titre-axe')
@@ -87,6 +93,7 @@ angular.module('cageApp').directive('graphique', function(){
                         .attr('text-anchor','middle')
                         .text('Note du film (sur 10)');
 
+            // Titre de l'axe des abcisses
             svg.append('text')
                 .attr('class', 'titre-axe')
                 .attr('text-anchor', 'middle')
@@ -94,6 +101,83 @@ angular.module('cageApp').directive('graphique', function(){
                 .attr('y',height + margin.bottom)
                 .text('Date de sortie des films.');
 
+            var circles = d3.selectAll('circle');
+            circles.on('click', (d) => {
+                tip.show(d.original_title);
+            });
+
+            function chooseColor(film) {
+                var genreDuFilm = film.genre_ids[0];
+                switch (genreDuFilm) {
+                    case 28:
+                        return 'DarkRed' ; //action
+                    break;
+                    case 12:
+                        return 'green' ; //adventure
+                    break;
+                    case 16:
+                        return 'Pink' ; //animation
+                    break;
+                    case 35:
+                        return 'LimeGreen' ; //comedy
+                    break;
+                    case 80:
+                        return 'DarkSeaGreen' ; //crime
+                    break;
+                    case 99:
+                        return 'SlateBlue' ; //documentary
+                    break;
+                    case 18:
+                        return 'PaleTurquoise' ; //drama
+                    break;
+                    case 10751:
+                        return 'Teal' ; //family
+                    break;
+                    case 14:
+                        return 'PeachPuff' ; //fantasy
+                    break;
+                    case 10769:
+                        return 'Gold' ; //foreign
+                    break;
+                    case 36:
+                        return 'RosyBrown' ; //history
+                    break;
+                    case 27:
+                        return 'Sienna' ; //horror
+                    break;
+                    case 10402:
+                        return 'LightSteelBlue' ; //music
+                    break;
+                    case 9648:
+                        return 'PowderBlue' ; //mystery
+                    break;
+                    case 10749:
+                        return 'PowderBlue' ; //romance
+                    break;
+                    case 878:
+                        return 'DodgerBlue' ; //science-fiction
+                    break;
+                    case 10770:
+                        return 'MidnightBlue' ; //tv show
+                    break;
+                    case 53:
+                        return 'LightSlateGray' ; //thriller
+                    break;
+                    case 10752:
+                        return 'Coral' ; //war
+                    break;
+                    case 37:
+                        return 'Moccasin' ; //western
+                    break;
+
+
+
+
+
+
+
+                }
+            }
         }
     }
 })
