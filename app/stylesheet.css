@@ -8,3 +8,7 @@ svg {
     fill: none;
     stroke:black;
 }
+
+.titre-axe {
+    fill: red;
+}
