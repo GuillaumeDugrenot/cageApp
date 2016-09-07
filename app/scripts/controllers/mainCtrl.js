@@ -4,13 +4,15 @@ angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos
         var nbPages      = films.total_pages;
         var genres       = [];
         var filmographie = [];
+        var dateToday = Date.now();
         for(var pageEnCours = 1; pageEnCours <= nbPages; pageEnCours++){
             actorInfos.movies.query({page: pageEnCours}, function(filmsParPage){
                 for(film in filmsParPage.results){
-                    if(filmsParPage.results[film].release_date != ''
-                    && filmsParPage.results[film].vote_average != 10
-                    && filmsParPage.results[film].vote_average != 0
-                    && filmsParPage.results[film].genre_ids.length != 0){
+                    var dateDuFilm = transformDate(filmsParPage.results[film].release_date);
+                    if(dateDuFilm <= Date.now()
+                        && filmsParPage.results[film].vote_average != 10
+                        && filmsParPage.results[film].vote_average != 0
+                        && filmsParPage.results[film].genre_ids.length != 0){
                         // Si le genre du film n'est pas déjà présent dans le tableau des genres, on l'ajoute
                         if(genres.indexOf(filmsParPage.results[film].genre_ids[0]) === -1){
                             genres.push(filmsParPage.results[film].genre_ids[0]);
@@ -23,4 +25,15 @@ angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos
         $scope.filmographie       = filmographie;
         $scope.genresFilmographie = genres;
     });
+
+    // @dateToParse: correspond à la date de sortie du film fourni par l'API
+    function transformDate(dateToParse){
+        if(dateToParse == false){
+            return dateToParse;
+        }
+        var strDate = dateToParse;
+        var dateParts = strDate.split('-');
+        var date = new Date(dateParts[0], dateParts[1], dateParts[2]);
+        return date;
+    }
 });
