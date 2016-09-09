@@ -7,7 +7,7 @@ angular.module('cageApp').directive('graphique', function(){
         templateUrl: 'templates/graphique.html',
         link: function(scope, element, attrs){
             /* Initialize tooltip */
-            var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d; });
+            var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d; }).offset([- 10, 0]);
             var films = scope.films;
             var margin = {left: 100, right: 100, bottom: 100, top: 100};
             var duration = 250;
@@ -20,7 +20,7 @@ angular.module('cageApp').directive('graphique', function(){
             // Set the range of the canvas
             var x = d3.time.scale().range([0, width]);
             var y = d3.scale.linear().range([height, 0]);
-            var r = d3.scale.linear().range([2, 10]);
+            var r = d3.scale.linear().range([4, 10]);
 
             // Parsing each release_date movie
             films.forEach((d) => {
@@ -53,6 +53,7 @@ angular.module('cageApp').directive('graphique', function(){
                 .data(films)
                 .enter()
                 .append('circle')
+                    .attr('class', 'film')
                     .attr('cx', 0)
                     .transition()
                     .duration(duration)
@@ -102,8 +103,12 @@ angular.module('cageApp').directive('graphique', function(){
                 .text('Date de sortie des films.');
 
             var circles = d3.selectAll('circle');
-            circles.on('click', (d) => {
-                tip.show(d.original_title);
+            circles.on('mouseover',(d) => {
+                tip.attr('class', 'd3-tip animate').show(d.original_title);
+            });
+            circles.on('mouseout', (d) => {
+                tip.attr('class', 'd3-tip').show(d);
+                tip.hide();
             });
 
             function chooseColor(film) {
