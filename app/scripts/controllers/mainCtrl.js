@@ -26,6 +26,9 @@ angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos
         $scope.genresFilmographie = genres;
     });
 
+    $scope.filtrerParGenre = function(id) {
+        console.log(id);
+    }
     // @dateToParse: correspond à la date de sortie du film fourni par l'API
     function transformDate(dateToParse){
         if(dateToParse == false){
