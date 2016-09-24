@@ -37,7 +37,7 @@ angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos
         if($scope.isFiltering){
             $scope.isFiltering = false;
         }
-    }
+    };
     // @dateToParse: correspond à la date de sortie du film fourni par l'API
     function transformDate(dateToParse){
         if(dateToParse == false){
