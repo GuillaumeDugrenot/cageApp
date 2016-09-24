@@ -1,4 +1,5 @@
 angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos){
+    $scope.isFiltering = false;
     // Recherches des films avec le provider actorInfos
     actorInfos.movies.query(function(films) {
         var nbPages      = films.total_pages;
@@ -26,8 +27,16 @@ angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos
         $scope.genresFilmographie = genres;
     });
 
-    $scope.filtrerParGenre = function(id) {
-        console.log(id);
+    // @genreName = représente le genre choisi par l'utilisateur au moment du click sur la légende des genres.
+    $scope.setActive = function(genreName) {
+        $scope.activeGenre = genreName;
+        $scope.isFiltering = true;
+    };
+
+    $scope.filterGenres = function(){
+        if($scope.isFiltering){
+            $scope.isFiltering = false;
+        }
     }
     // @dateToParse: correspond à la date de sortie du film fourni par l'API
     function transformDate(dateToParse){
