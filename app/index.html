@@ -8,7 +8,8 @@
     <body ng-controller="mainCtrl">
 
         <div ng-if='filmographie'>
-            <graphique films ='filmographie'></graphique>
+            <graphique films ='filmographie' genre = 'activeGenre' is-filtering='isFiltering'></graphique>
+            {{activeGenre}}
             <legende></legende>
         </div>
         <!-- Liste des dépendances -->
