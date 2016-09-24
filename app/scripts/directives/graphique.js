@@ -2,10 +2,13 @@ angular.module('cageApp').directive('graphique', function(){
     return {
         restrict: 'E',
         scope:{
-            films: '='
+            films       : ' =',
+            genre       : ' =',
+            isFiltering : ' ='
         },
         templateUrl: 'templates/graphique.html',
         link: function(scope, element, attrs){
+
             /* Initialize tooltip */
             var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d; }).offset([- 10, 0]);
             var films = scope.films;
@@ -53,7 +56,9 @@ angular.module('cageApp').directive('graphique', function(){
                 .data(films)
                 .enter()
                 .append('circle')
-                    .attr('class', 'film')
+                    .attr('id', (d) => {
+                        return d.genre_ids[0];
+                    })
                     .attr('cx', 0)
                     .transition()
                     .duration(duration)
@@ -110,6 +115,28 @@ angular.module('cageApp').directive('graphique', function(){
                 tip.attr('class', 'd3-tip').show(d);
                 tip.hide();
             });
+
+            scope.$watch('genre', function(genre){
+                svg.selectAll('circle')
+                    .filter((d) => {
+                        return d.genre_ids[0] == genre;
+                    })
+                    .attr('display', 'inline');
+                svg.selectAll('circle')
+                    .filter((d) => {
+                        return d.genre_ids[0] != genre;
+                    })
+                    .attr('display', 'none')
+            });
+
+            scope.$watch('isFiltering', (isFiltering) => {
+                console.log(isFiltering);
+                if(isFiltering == false){
+                    svg.selectAll('circle')
+                        .attr('display', 'inline');
+                }
+            })
+
 
             function chooseColor(film) {
                 var genreDuFilm = film.genre_ids[0];

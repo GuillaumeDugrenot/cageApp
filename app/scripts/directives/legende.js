@@ -1,7 +1,6 @@
 angular.module('cageApp').directive('legende', function($q, actorInfos) {
     return {
         restrict: 'E',
-        // templateAsUrl: 'scripts/templates/legende.html',
         templateUrl: 'templates/legende.html',
         replace: true,
         link: function(scope, element, attrs) {
@@ -12,7 +11,6 @@ angular.module('cageApp').directive('legende', function($q, actorInfos) {
             actorInfos.genres.query(function(results){
                 deferred.resolve(results.genres);
             });
-
             promiseGenres.then(function (genres) {
                 // Je transforme chaque genreId en un objet "genre" possédant un id ainsi que le nom associé.
                 scope.genresFilmographie.map(function (genre, index, tableau){
@@ -25,7 +23,6 @@ angular.module('cageApp').directive('legende', function($q, actorInfos) {
                         }
                     }
                 });
-                console.log(scope.genresFilmographie);
             });
 
 
