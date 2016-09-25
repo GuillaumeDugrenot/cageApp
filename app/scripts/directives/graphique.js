@@ -117,23 +117,28 @@ angular.module('cageApp').directive('graphique', function(){
             });
 
             scope.$watch('genre', function(genre){
-                svg.selectAll('circle')
+                // Condition verifiant que genre != null, sinon, il trie les films selon un genre undéfini, cachant tous les points.
+                if(genre != null){
+                    svg.selectAll('circle')
                     .filter((d) => {
                         return d.genre_ids[0] == genre;
                     })
-                    .attr('display', 'inline');
-                svg.selectAll('circle')
+                    .attr('class', 'active animated fadeInUp');
+                    svg.selectAll('circle')
                     .filter((d) => {
                         return d.genre_ids[0] != genre;
                     })
-                    .attr('display', 'none')
+                    .attr('class', 'no-active')
+                }
             });
 
+            // On observe tous les changements de la variable isFiltering (indiquant si le graphique est filtré selon un genre ou non)
             scope.$watch('isFiltering', (isFiltering) => {
                 console.log(isFiltering);
+                // Si aucun genre n'est sélectionné, alors on affiche tous les films
                 if(isFiltering == false){
                     svg.selectAll('circle')
-                        .attr('display', 'inline');
+                        .attr('class', 'animated fadeInUp');
                 }
             })
 
