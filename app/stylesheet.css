@@ -9,7 +9,7 @@ svg {
     stroke:black;
 }
 
-circle.film:hover{
+circle:hover{
     cursor:pointer;
 }
 .titre-axe {
@@ -83,3 +83,13 @@ circle.film:hover{
       transform: scale(1);
     }
   }
+
+.active{
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .5s, visibility .5s;
+}
+.no-active{
+    visibility: hidden;
+    opacity: 0;
+}
