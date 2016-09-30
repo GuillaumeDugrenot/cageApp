@@ -138,7 +138,7 @@ angular.module('cageApp').directive('graphique', function(){
                 // Si aucun genre n'est sélectionné, alors on affiche tous les films
                 if(isFiltering == false){
                     svg.selectAll('circle')
-                        .attr('class', 'animated fadeInUp');
+                        .attr('class', 'active animated fadeInUp');
                 }
             })
 
