@@ -1,17 +1,22 @@
 angular.module('cageApp').directive('graphique', function(){
     return {
         restrict: 'E',
-        scope:{
-            films       : ' =',
-            genre       : ' =',
-            isFiltering : ' ='
-        },
+        /* Description du scope:
+            @films: ensemble des films de l'acteur
+            @genreActif: genre actuellement selectionné par l'utilisateur
+            @isFiltering: booléen indiquant si un genre a été choisi par l'utilisateur
+        */
+        // scope:{
+        //     films       : ' =',
+        //     genreActif       : ' =',
+        //     isFiltering : ' =',
+        // },
         templateUrl: 'templates/graphique.html',
-        link: function(scope, element, attrs){
-
+        link: function(scope, element, attrs, legendeCtrl){
+            console.log(scope.filmographie);
             /* Initialize tooltip */
             var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d; }).offset([- 10, 0]);
-            var films = scope.films;
+            var films = scope.filmographie;
             var margin = {left: 100, right: 100, bottom: 100, top: 100};
             var duration = 250;
             // time parsing's function
@@ -76,7 +81,7 @@ angular.module('cageApp').directive('graphique', function(){
                         return r(d.popularity);
                     })
                     .attr('fill', (d) => {
-                        return chooseColor(d);
+                        return scope.findColor(d.genre_ids[0]);
                     })
 
 
@@ -116,7 +121,7 @@ angular.module('cageApp').directive('graphique', function(){
                 tip.hide();
             });
 
-            scope.$watch('genre', function(genre){
+            scope.$watch('activeGenre', function(genre){
                 // Condition verifiant que genre != null, sinon, il trie les films selon un genre undéfini, cachant tous les points.
                 if(genre != null){
                     svg.selectAll('circle')
@@ -141,8 +146,6 @@ angular.module('cageApp').directive('graphique', function(){
                         .attr('class', 'active animated fadeInUp');
                 }
             })
-
-
             function chooseColor(film) {
                 var genreDuFilm = film.genre_ids[0];
                 switch (genreDuFilm) {
@@ -206,12 +209,6 @@ angular.module('cageApp').directive('graphique', function(){
                     case 37:
                         return 'Moccasin' ; //western
                     break;
-
-
-
-
-
-
 
                 }
             }
