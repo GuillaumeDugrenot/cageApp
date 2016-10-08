@@ -28,8 +28,8 @@ angular.module('cageApp').controller('mainCtrl', function($scope, $q, actorInfos
     });
 
     // @genreName = représente le genre choisi par l'utilisateur au moment du click sur la légende des genres.
-    $scope.setActive = function(genreName) {
-        $scope.activeGenre = genreName;
+    $scope.setActive = function(genre) {
+        $scope.activeGenre = genre;
         $scope.isFiltering = true;
     };
 
