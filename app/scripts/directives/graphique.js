@@ -1,11 +1,6 @@
 angular.module('cageApp').directive('graphique', function(){
     return {
         restrict: 'E',
-        /* Description du scope:
-            @films: ensemble des films de l'acteur
-            @genreActif: genre actuellement selectionné par l'utilisateur
-            @isFiltering: booléen indiquant si un genre a été choisi par l'utilisateur
-        */
         // scope:{
         //     films       : ' =',
         //     genreActif       : ' =',
@@ -13,7 +8,7 @@ angular.module('cageApp').directive('graphique', function(){
         // },
         templateUrl: 'templates/graphique.html',
         link: function(scope, element, attrs, legendeCtrl){
-            console.log(scope.filmographie);
+            // console.log(scope.genresFilmographie);
             /* Initialize tooltip */
             var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d; }).offset([- 10, 0]);
             var films = scope.filmographie;
@@ -57,7 +52,7 @@ angular.module('cageApp').directive('graphique', function(){
                             .call(tip);
 
             // Paramétrage des cercles
-            svg.selectAll('circle')
+            var test = svg.selectAll('circle')
                 .data(films)
                 .enter()
                 .append('circle')
@@ -81,7 +76,7 @@ angular.module('cageApp').directive('graphique', function(){
                         return r(d.popularity);
                     })
                     .attr('fill', (d) => {
-                        return scope.findColor(d.genre_ids[0]);
+                        return chooseColor(d.genre_ids[0]);
                     })
 
 
@@ -139,77 +134,17 @@ angular.module('cageApp').directive('graphique', function(){
 
             // On observe tous les changements de la variable isFiltering (indiquant si le graphique est filtré selon un genre ou non)
             scope.$watch('isFiltering', (isFiltering) => {
-                console.log(isFiltering);
                 // Si aucun genre n'est sélectionné, alors on affiche tous les films
                 if(isFiltering == false){
                     svg.selectAll('circle')
                         .attr('class', 'active animated fadeInUp');
                 }
-            })
-            function chooseColor(film) {
-                var genreDuFilm = film.genre_ids[0];
-                switch (genreDuFilm) {
-                    case 28:
-                        return 'DarkRed' ; //action
-                    break;
-                    case 12:
-                        return 'green' ; //adventure
-                    break;
-                    case 16:
-                        return 'Pink' ; //animation
-                    break;
-                    case 35:
-                        return 'LimeGreen' ; //comedy
-                    break;
-                    case 80:
-                        return 'DarkSeaGreen' ; //crime
-                    break;
-                    case 99:
-                        return 'SlateBlue' ; //documentary
-                    break;
-                    case 18:
-                        return 'PaleTurquoise' ; //drama
-                    break;
-                    case 10751:
-                        return 'Teal' ; //family
-                    break;
-                    case 14:
-                        return 'PeachPuff' ; //fantasy
-                    break;
-                    case 10769:
-                        return 'Gold' ; //foreign
-                    break;
-                    case 36:
-                        return 'RosyBrown' ; //history
-                    break;
-                    case 27:
-                        return 'Sienna' ; //horror
-                    break;
-                    case 10402:
-                        return 'LightSteelBlue' ; //music
-                    break;
-                    case 9648:
-                        return 'PowderBlue' ; //mystery
-                    break;
-                    case 10749:
-                        return 'PowderBlue' ; //romance
-                    break;
-                    case 878:
-                        return 'DodgerBlue' ; //science-fiction
-                    break;
-                    case 10770:
-                        return 'MidnightBlue' ; //tv show
-                    break;
-                    case 53:
-                        return 'LightSlateGray' ; //thriller
-                    break;
-                    case 10752:
-                        return 'Coral' ; //war
-                    break;
-                    case 37:
-                        return 'Moccasin' ; //western
-                    break;
-
+            });
+            function chooseColor(genreDuFilm){
+                for (var i = 0; i < scope.genresFilmographie.length; i++) {
+                    if(genreDuFilm === scope.genresFilmographie[i].id){
+                        return scope.genresFilmographie[i].color
+                    }
                 }
             }
         }

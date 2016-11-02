@@ -8,8 +8,12 @@
     <body ng-controller="mainCtrl">
 
         <div ng-if='filmographie'>
-            <graphique films ='filmographie' genre-actif = 'activeGenre' is-filtering='isFiltering'></graphique>
-            {{activeGenre}}
+            <graphique></graphique>
+            <div>
+                Genre actuellement actif : {{activeGenre}}
+            </div>
+            <div ng-repeat="genre in genres">{{genre}}
+            </div>
             <legende></legende>
         </div>
         <!-- Liste des dépendances -->
@@ -18,10 +22,12 @@
         <script src="bower_components/d3/d3.min.js"></script>
         <script src="bower_components/d3-tip/index.js"></script>
         <script src="bower_components/pleasejs/src/Please.js"></script>
+        <script src="bower_components/lodash/lodash.js"></script>
         <script src="scripts/app.js"></script>
 
         <!-- Liste des services -->
         <script src="scripts/services/actorInfos.js"></script>
+        <script src="scripts/services/genresTraitement.js"></script>
 
         <!-- Liste des contrôleurs -->
         <script src="scripts/controllers/mainCtrl.js"></script>

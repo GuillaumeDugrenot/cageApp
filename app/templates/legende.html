@@ -1,4 +1,4 @@
 <ul>
-    <li id="{{genre.id}}" ng-click="setActive(genre.id)" ng-repeat="genre in genresFilmographie">{{genre.name}}</li>
+    <li class="genre" ng-style="{'background-color': genre.color}" ng-click="setActive(genre.id)" ng-repeat="genre in genresFilmographie">{{genre.name}} : {{genre.color}}</li>
     <li ng-click="filterGenres()" ng-cloak>Tous les genres</li>
 </ul>

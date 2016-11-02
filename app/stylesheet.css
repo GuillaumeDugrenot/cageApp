@@ -11,9 +11,18 @@ svg {
 
 circle:hover{
     cursor:pointer;
+    opacity: 1;
+}
+circle{
+    opacity:.7;
 }
 .titre-axe {
     fill: red;
+}
+/*Représente chaque genre présent dans la légende*/
+.genre{
+    width: 50%;
+    height: 150%;
 }
 
 .d3-tip {
@@ -85,7 +94,6 @@ circle:hover{
   }
 
 .active{
-    opacity: 1;
     visibility: visible;
     transition: opacity .25s, visibility .25s;
 }
